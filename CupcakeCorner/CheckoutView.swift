@@ -11,6 +11,9 @@ struct CheckoutView: View {
     @State private var confirmationMessage = ""
     @State private var showingConfirmation = false
     
+    @State private var errorMessage = ""
+    @State private var showingError = false
+    
     var order: Order
     
     var body: some View {
@@ -43,6 +46,11 @@ struct CheckoutView: View {
             Button("OK") { }
         } message: {
             Text(confirmationMessage)
+        }
+        .alert("Checkout Failed", isPresented: $showingError) {
+            Button("OK") { }
+        } message: {
+            Text(errorMessage)
         }
     }
     
@@ -79,8 +87,14 @@ struct CheckoutView: View {
             default:
                 print("Decoding Error: Unknown sorting issue.")
             }
+            
+            errorMessage = "We had trouble parsing the order details from the server. Please try again."
+            showingError = true
         } catch {
             print("Checkout failed: \(error.localizedDescription)")
+            
+            errorMessage = "Connection error. Please try again."
+            showingError = true
         }
     }
 }
