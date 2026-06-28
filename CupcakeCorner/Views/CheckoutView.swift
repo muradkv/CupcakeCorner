@@ -14,7 +14,7 @@ struct CheckoutView: View {
     @State private var errorMessage = ""
     @State private var showingError = false
     
-    var order: Order
+    let order: Order
     
     var body: some View {
         ScrollView {

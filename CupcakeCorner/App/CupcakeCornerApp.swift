@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct CupcakeCornerApp: App {
+    @State private var viewModel = OrderViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CupcakeOrderView(viewModel: viewModel)
         }
     }
 }
