@@ -9,8 +9,13 @@ import SwiftUI
 
 @Observable
 final class Order: Codable {
+    // MARK: - Type Constants
     static let types = ["Vanilla", "Strawberry", "Chocolate", "Rainbow"]
+    
+    // MARK: - Private Constants
+    private let addressKey = "SavedAddressProfile"
 
+    // MARK: - Stored Properties (Basket)
     var type = 0
     var quantity = 3
 
@@ -26,16 +31,24 @@ final class Order: Codable {
     var extraFrosting = false
     var addSprinkles = false
     
-    var name = ""
-    var streetAddress = ""
-    var city = ""
-    var zip = ""
+    // MARK: - Stored Properties (Delivery)
+    var address = Address() {
+        didSet {
+            saveAddressToDisk()
+        }
+    }
     
+    // MARK: - Initialization
+    init() {
+        loadAddressFromDisk()
+    }
+    
+    // MARK: - Computed Properties
     var hasValidAddress: Bool {
-        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedStreetAddress = streetAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedZip = zip.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedName = address.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedStreetAddress = address.streetAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedCity = address.city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedZip = address.zip.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if trimmedName.isEmpty || trimmedStreetAddress.isEmpty || trimmedCity.isEmpty || trimmedZip.isEmpty {
             return false
@@ -60,15 +73,34 @@ final class Order: Codable {
         return cost
     }
     
+    // MARK: - Private Disk Storage Methods
+    private func saveAddressToDisk() {
+        do {
+            let data = try JSONEncoder().encode(address)
+            UserDefaults.standard.set(data, forKey: addressKey)
+        } catch {
+            print("Failed to save address to disk: \(error.localizedDescription)")
+        }
+    }
+    
+    private func loadAddressFromDisk() {
+        guard let savedData = UserDefaults.standard.data(forKey: addressKey) else { return }
+        
+        do {
+            let decodedAddress = try JSONDecoder().decode(Address.self, from: savedData)
+            self.address = decodedAddress
+        } catch {
+            print("Failed to load and decode address: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - Codable Mapping
     enum CodingKeys: String, CodingKey {
         case _type = "type"
         case _quantity = "quantity"
         case _specialRequestEnabled = "specialRequestEnabled"
         case _extraFrosting = "extraFrosting"
         case _addSprinkles = "addSprinkles"
-        case _name = "name"
-        case _city = "city"
-        case _streetAddress = "streetAddress"
-        case _zip = "zip"
+        case _address = "address"
     }
 }
