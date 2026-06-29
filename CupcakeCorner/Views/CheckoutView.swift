@@ -25,12 +25,22 @@ struct CheckoutView: View {
                 Text("Your total is \(viewModel.order.cost, format: .currency(code: "USD"))")
                     .font(.title)
                 
-                Button("Place Order") {
+                Button {
                     Task {
                         await viewModel.placeOrder()
                     }
+                } label: {
+                    if viewModel.isSubmitting {
+                        HStack {
+                            ProgressView()
+                            Text("Placing Order...")
+                        }
+                    } else {
+                        Text("Place Order")
+                    }
                 }
                 .padding()
+                .disabled(viewModel.isSubmitting)
             }
         }
         .navigationTitle("Check out")

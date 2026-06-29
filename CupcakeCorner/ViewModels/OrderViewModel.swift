@@ -15,6 +15,7 @@ final class OrderViewModel {
     var showingConfirmation = false
     var errorMessage = ""
     var showingError = false
+    var isSubmitting = false
     
     private let addressKey = "SavedAddressProfile"
     
@@ -23,6 +24,12 @@ final class OrderViewModel {
     }
     
     func placeOrder() async {
+        isSubmitting = true
+        
+        defer {
+            isSubmitting = false
+        }
+        
         guard let encoded = try? JSONEncoder().encode(order) else {
             print("Failed to encode order")
             return
