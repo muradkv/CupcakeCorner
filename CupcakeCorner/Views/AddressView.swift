@@ -19,13 +19,12 @@ struct AddressView: View {
                 TextField("Zip", text: $viewModel.order.address.zip)
             }
             .onChange(of: viewModel.order.address) { oldValue, newValue in
-                print("Change")
                 viewModel.updateAndSaveAddress()
             }
 
             Section {
                 NavigationLink("Check out") {
-                    CheckoutView(order: viewModel.order)
+                    CheckoutView(viewModel: viewModel)
                 }
             }
             .disabled(viewModel.order.hasValidAddress == false)
