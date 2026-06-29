@@ -34,3 +34,14 @@ Beyond the core course requirements, the entire codebase was meticulously refact
 * **Targeted Disk I/O Performance Tuning:** Eradicated expensive global `didSet` observers that triggered redundant `UserDefaults` operations on every basket configuration step. Replaced them with a targeted `.onChange(of:)` modifier on the view layer to execute disk serialization strictly when profile address fields mutate.
 
 🔗 **[Full project description here](https://www.hackingwithswift.com/100/swiftui/49)**
+
+## Project Versioning & Changelog
+
+* **v1.2.0 (Architecture Overhaul & UX Polish)** — `commit: cc62d5`
+  Major structural and architectural upgrade. Migrated models into clean structs and introduced `OrderViewModel` to handle state ownership. Relocated `UserDefaults` storage into high-performance targeted `.onChange` view modifiers. Extracted API interactions to the ViewModel layer, integrated an inline `ProgressView` submission tracker, and blocked multi-tap request mutations via native view disabling controls.
+
+* **v1.1.0 (Persistent Delivery Profiles)** — `commit: c6df38a`
+  Minor feature release completing the final challenge parameters. Adds baseline auto-loading and auto-saving capabilities for the client profile using JSONEncoder pipelines and system key-value storage.
+
+* **v1.0.0 (Functional MVP Baseline)** — `commit: 974fa3e`
+  Initial release matching the standard course curriculum. Sets up vanilla forms, procedural networking functions inside views, and strict inline string validation fields.
