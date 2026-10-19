@@ -21,6 +21,7 @@ struct CheckoutView: View {
                     ProgressView()
                 }
                 .frame(height: 233)
+                .accessibilityHidden(true)
                 
                 Text("Your total is \(viewModel.order.cost, format: .currency(code: "USD"))")
                     .font(.title)
@@ -33,6 +34,7 @@ struct CheckoutView: View {
                     if viewModel.isSubmitting {
                         HStack {
                             ProgressView()
+                                .accessibilityHidden(true)
                             Text("Placing Order...")
                         }
                     } else {
