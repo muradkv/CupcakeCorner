@@ -21,27 +21,33 @@ Cupcake Corner allows users to select cupcake configurations, toggle special bak
 * **Dynamic Order Configuration:** Tailor cupcake types, quantities, and optional premium additions like extra frosting or sprinkles with fluid form interactions.
 * **Declarative Address Validation:** Real-time checking of delivery input data that intelligently ignores whitespace-only entries to block invalid order submissions.
 * **Robust Networking Flow:** Serializes order parameters into strict JSON payload data, executes asynchronous network transmissions using `URLSession`, and maps remote responses.
+* **VoiceOver Accessibility:** Suppresses non-essential decorative artwork and loading spinners in the checkout flow so screen readers focus strictly on pricing and order actions.
 * **Seamless User Feedback:** Dual-alert system handles both checkout confirmations and detailed parsing/decoding connection failures gracefully.
 
 ## About the Project & Challenge
 
-This application was originally built to fulfill **Project 10 (Days 49-52)** of the SwiftUI learning path by Paul Hudson (Hacking with Swift). The core educational goal was to master forms, basic networking pipelines, and understanding asynchronous tasks.
+This application was originally built to fulfill **Project 10 (Days 49-52)** of the SwiftUI learning path by Paul Hudson (Hacking with Swift), and later enhanced with the **Project 15 (Day 76 — Accessibility)** challenge. The core educational goal was to master forms, basic networking pipelines, and understanding asynchronous tasks.
 
 Beyond the core course requirements, the entire codebase was meticulously refactored into a commercial-grade **MVVM** architecture, completely decoupling the domain data layer from view states. Key concepts and best practices implemented include:
 
 * **Pure Domain Structures:** Refactored the core data layers (`Order` and `Address`) into lightweight, framework-independent immutable structures (`struct`). This completely removed heavy `@Observable` macro expansion wrappers and custom `CodingKeys` maps, leaving a compiler-synthesized, clean `Codable` protocol layer.
 * **Centralized State & Routing Flow:** Implemented an enterprise-grade `OrderViewModel` as the single source of truth. The instance acts as a persistent reference type that is natively injected across screens using explicit `@Bindable` properties, keeping sub-views reactive yet read-only.
 * **Targeted Disk I/O Performance Tuning:** Eradicated expensive global `didSet` observers that triggered redundant `UserDefaults` operations on every basket configuration step. Replaced them with a targeted `.onChange(of:)` modifier on the view layer to execute disk serialization strictly when profile address fields mutate.
+* **Accessibility Tree Hygiene (Day 76 — Project 15 Challenge):** Applied `.accessibilityHidden(true)` to the remote `AsyncImage` container and inline `ProgressView` indicators in `CheckoutView`, preventing VoiceOver from announcing decorative filenames and redundant loading states.
 
 🔗 **[Full project description here](https://www.hackingwithswift.com/100/swiftui/49)**
+🔗 **[Accessibility challenge (Day 76)](https://www.hackingwithswift.com/100/swiftui/76)**
 
 ## Project Versioning & Changelog
 
-* **v1.2.0 (Architecture Overhaul & UX Polish)** — `commit: cc62d5`
+* **v1.3.0 (VoiceOver Accessibility Polish)** — `commit: ababbfd`  
+  Completed the Day 76 accessibility challenge. Hidden the decorative `AsyncImage` container, placeholder spinner, and inline button `ProgressView` in `CheckoutView` from VoiceOver.
+
+* **v1.2.0 (Architecture Overhaul & UX Polish)** — `commit: cc62d53`
   Major structural and architectural upgrade. Migrated models into clean structs and introduced `OrderViewModel` to handle state ownership. Relocated `UserDefaults` storage into high-performance targeted `.onChange` view modifiers. Extracted API interactions to the ViewModel layer, integrated an inline `ProgressView` submission tracker, and blocked multi-tap request mutations via native view disabling controls.
 
 * **v1.1.0 (Persistent Delivery Profiles)** — `commit: c6df38a`
   Minor feature release completing the final challenge parameters. Adds baseline auto-loading and auto-saving capabilities for the client profile using JSONEncoder pipelines and system key-value storage.
 
-* **v1.0.0 (Functional MVP Baseline)** — `commit: 974fa3e`
+* **v1.0.0 (Functional MVP Baseline)** — `commit: 61f1dac`
   Initial release matching the standard course curriculum. Sets up vanilla forms, procedural networking functions inside views, and strict inline string validation fields.
